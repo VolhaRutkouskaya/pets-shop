@@ -84,3 +84,73 @@ const items = [
     img: "./img/12.jpeg",
   },
 ];
+
+
+const shopItems = document.querySelector("#shop-item");
+
+const searchBtn = document.querySelector('#search-btn');
+
+const searchInput = document.querySelector('#search-input');
+
+const textContainer = document.querySelector('.texts');
+
+
+
+function makeCardByTemplate(title, description, tags, price, img) {
+
+  const myCard = itemTemplate.content.cloneNod(true);
+
+  myCard.querySelector('h1').textContent = title;
+  myCard.querySelector('p').textContent = description;
+  myCard.querySelector('img').src = img;
+  myCard.querySelector('.price').textContent = price;
+  myCard.querySelector('.tags').textContent = tags;
+
+  return myCard;
+};
+
+items.forEach(function(item) {
+  const Card = makeCardByTemplate (`${iten.title}, ${item.description}, ${item.tags}, ${item.price}, ${item.img}`);
+  
+  shopItems.append(Card);
+});
+
+/*Товары после применения поиска которые мы будем показывать пользователю*/
+
+let currentState = [...items];
+
+
+//Переменная с контейнером для товаров
+const itemsContainer = document.querySelector('#shop-items');
+
+//Шаблон для товаров
+const itemTemplate = document.querySelector('#item-template');
+
+//Текст если ни чего не найдено
+const nothingFound = document.querySelector('#nothing-found');
+
+
+//Функция для отрисовки
+//В качестве параметров - товарыб которые нужно отсортировать
+
+function renderItems(arr) {
+  //Сбрасываем текст "Ничего не найдено" после предыдущего поиска
+  nothingFound.textContent = "";
+
+  //И чистим контейнер с товрами на случай если там чтото было
+
+  itemsContainer.innerHTML = "";
+
+  // Отрисовываем товары из переданного параметра arr
+  arr.forEach((item) => {
+    //Вызываем prepareShopItem для каждого товараб и подставляем результат в верстку
+    itemsContainer.append(prepareShopItem(item));
+  })
+ 
+  //Если массив товаров пустой, отображаем текстб что ни чего не нашлось
+  if (!arr.length) {
+    nothingFound.textContent = "Ничего не найдено";
+  }
+}
+
+
