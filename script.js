@@ -13,7 +13,7 @@ const nothingFound = document.querySelector('#nothing-found');
 
 function makeCardByTemplate(title, description, tags, price, img) {
 
-  const myCard = itemTemplate.content.cloneNod(true);
+  const myCard = itemTemplate.content.cloneNode(true);
 
   myCard.querySelector('h1').textContent = title;
   myCard.querySelector('p').textContent = description;
@@ -126,7 +126,7 @@ const items = [
 
 
 items.forEach(function(item) {
-  const Card = makeCardByTemplate (`${iten.title}, ${item.description}, ${item.tags}, ${item.price}, ${item.img}`);
+  const Card = makeCardByTemplate(`${item.title}, ${item.description}, ${item.tags}, ${item.price}, ${item.img}`);
   
   shopItems.append(Card);
 });
@@ -137,7 +137,7 @@ let currentState = [...items];
 //Функция для отрисовки
 //В качестве параметров - товарыб которые нужно отсортировать
 
-function renderItems(arr) {
+function renderItems(currentState) {
   //Сбрасываем текст "Ничего не найдено" после предыдущего поиска
   nothingFound.textContent = "";
 
@@ -145,19 +145,27 @@ function renderItems(arr) {
   itemsContainer.innerHTML = "";
 
   // Отрисовываем товары из переданного параметра arr
-  arr.forEach((item) => {
-    //Вызываем prepareShopItem для каждого товараб и подставляем результат в верстку
-    itemsContainer.append(prepareShopItem(item));
+  currentState.forEach((item) => {
+    //Вызываем prepareShopItem для каждого товара и подставляем результат в верстку
+    itemsContainer.append(prepereShopItemShopItem(item));
   });
  
   //Если массив товаров пустой, отображаем текст, что ни чего не нашлось
-  if (!arr.length) {
+  if (!currentState.length) {
     nothingFound.textContent = "Ничего не найдено";
   };
 };
 
 //Вызываем функцию для отрисовки в самом начале
 renderItems(currentState);
+
+
+//Импут для поиска
+const searchInput = document.querySelector('#search=input');
+
+//Кнопка
+const searchBtn = document.querySelector("#search-btn");
+
 
 //Фукция-хелпер для сортировки товара по олфавиту
 function sortByAlphabet(a, b) {
@@ -180,54 +188,49 @@ function sortByAlphabet(a, b) {
 
 
   searchBtn.addEventListener('click', function() {
-    const searchText = searchInput.value;
+  const searchText = searchInput.value;
 
-
-    //Функция для создания верстки конкретного товара
-    function prepereShopItem(shopItem) {
-    //Деструктурируем свойства обьекта
-    const {title, description, tags, img, price, rating} = shopItem;
-
-    //Берем за основу шаблон товара
-    const item = itemTemplate.content.cloneNod(true);
-
-    //Наполняем его информацией из обьекта
-    item.querySelector("h1").textContent = title;
-    item.querySelector("p").textContent = description;
-    item.querySelector("img").src = img;
-    item.querySelector(".price").textContent = `${price}P`;
-
-    //Находим контейнер для рейтинга
-    const ratingContainer = item.querySelector('.rating');
-
-    //Рисуем нужное количество звездочек
-   for (let i = 0; i < rating; i++) {
-    const star = document.createElement("i");
-    star.classList.add("fa", "fa-star");
-    ratingContainer.append(star);
-    };
-    //Находим шаблон для тегов
-    const tagsHolder = item.querySelector(".tags");
-
-    //Отрисовываем теги для твара
-    tags.forEach((tag) => {
-    const element = document.createElement("span");
-    element.textContent = tag;
-    element.classList.add("tag");
-    tagsHolder.append(element);
-    });
-   //возвращаем HTML-элемент
-
-    return item;
-  };
+});
   
-}
+//Функция для создания верстки конкретного товара
+function prepereShopItem(shopItem) {
+  //Деструктурируем свойства обьекта
+  const {title, description, tags, img, price, rating} = shopItem;
 
-//Импут для поиска
-const searchInput = document.querySelector('#search=input');
+  //Берем за основу шаблон товара
+  const item = itemTemplate.content.cloneNode(true);
 
-//Кнопка
-const searchBtn = document.querySelector("#search-btn");
+  //Наполняем его информацией из обьекта
+  item.querySelector("h1").textContent = title;
+  item.querySelector("p").textContent = description;
+  item.querySelector("img").src = img;
+  item.querySelector(".price").textContent = `${price}P`;
+
+  //Находим контейнер для рейтинга
+  const ratingContainer = item.querySelector('.rating');
+
+  //Рисуем нужное количество звездочек
+ for (let i = 0; i < rating; i++) {
+  const star = document.createElement("i");
+  star.classList.add("fa", "fa-star");
+  ratingContainer.append(star);
+  };
+  //Находим шаблон для тегов
+  const tagsHolder = item.querySelector(".tags");
+
+  //Отрисовываем теги для твара
+  tags.forEach((tag) => {
+  const element = document.createElement("span");
+  element.textContent = tag;
+  element.classList.add("tag");
+  tagsHolder.append(element);
+  });
+ //возвращаем HTML-элемент
+
+  return item;
+};
+
+
 
 //функция для поиска по товарам(сбрасывает фильтр)
 function applySearch() {
