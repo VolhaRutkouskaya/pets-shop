@@ -137,7 +137,7 @@ let currentState = [...items];
 //Функция для отрисовки
 //В качестве параметров - товарыб которые нужно отсортировать
 
-function renderItems(currentState) {
+function renderItems(arr) {
   //Сбрасываем текст "Ничего не найдено" после предыдущего поиска
   nothingFound.textContent = "";
 
@@ -145,23 +145,23 @@ function renderItems(currentState) {
   itemsContainer.innerHTML = "";
 
   // Отрисовываем товары из переданного параметра arr
-  currentState.forEach((item) => {
+  arr.forEach((item) => {
     //Вызываем prepareShopItem для каждого товара и подставляем результат в верстку
-    itemsContainer.append(prepereShopItemShopItem(item));
+    itemsContainer.append(prepareShopItem(item));
   });
  
   //Если массив товаров пустой, отображаем текст, что ни чего не нашлось
-  if (!currentState.length) {
+  if (!arr.length) {
     nothingFound.textContent = "Ничего не найдено";
   };
 };
 
 //Вызываем функцию для отрисовки в самом начале
-renderItems(currentState);
+renderItems(currentState.sort((a, b) => sortByAlphabet(a, b)));
 
 
 //Импут для поиска
-const searchInput = document.querySelector('#search=input');
+const searchInput = document.querySelector('#search-input');
 
 //Кнопка
 const searchBtn = document.querySelector("#search-btn");
@@ -193,7 +193,7 @@ function sortByAlphabet(a, b) {
 });
   
 //Функция для создания верстки конкретного товара
-function prepereShopItem(shopItem) {
+function prepareShopItem(shopItem) {
   //Деструктурируем свойства обьекта
   const {title, description, tags, img, price, rating} = shopItem;
 
@@ -209,27 +209,8 @@ function prepereShopItem(shopItem) {
   //Находим контейнер для рейтинга
   const ratingContainer = item.querySelector('.rating');
 
-  //Рисуем нужное количество звездочек
- for (let i = 0; i < rating; i++) {
-  const star = document.createElement("i");
-  star.classList.add("fa", "fa-star");
-  ratingContainer.append(star);
-  };
-  //Находим шаблон для тегов
-  const tagsHolder = item.querySelector(".tags");
-
-  //Отрисовываем теги для твара
-  tags.forEach((tag) => {
-  const element = document.createElement("span");
-  element.textContent = tag;
-  element.classList.add("tag");
-  tagsHolder.append(element);
-  });
- //возвращаем HTML-элемент
-
   return item;
 };
-
 
 
 //функция для поиска по товарам(сбрасывает фильтр)
